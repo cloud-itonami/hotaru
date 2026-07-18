@@ -1,6 +1,8 @@
 {:actor/id        "hotaru"
  :actor/glyph     "蛍"
+ :actor/display-name "蛍 — III-V / InP Substrate Open-Commons"
  :actor/tier      :tier-b
+ :actor/integrates ["hikari" "himawari" "silicon"]
  :actor/domain    "hotaru.etzhayyim.com"
  :actor/did       "did:web:etzhayyim.com:actor:hotaru"
  :actor/purpose   "Open-publication knowledge commons for III-V compound-semiconductor SUBSTRATE generation + manufacturing — indium phosphide (InP) first, then the adjacent direct-bandgap III-V family (GaAs/GaN/InGaAs/GaSb). 蛍 (firefly) = direct-bandgap light emission: silicon's INDIRECT bandgap is WHY the III-V family exists (lasers/LEDs/photodetectors/photonic ICs/the optics that run optical fibre + the submarine cables watatsuna maps); hotaru is the light-emitting-crystal commons, sibling of the iwakura/fuigo indirect-bandgap silicon track (ADR-2605242500). Datafies the substrate chain (synthesis → single-crystal bulk-growth LEC/VGF/VB → wafering → epi-ready surface-prep) into the kotoba Datom log with as-of history. Charter-clean BY CONSTRUCTION: only practiceable-OPEN process knowledge (:source-license invariant, G1 — vendor-proprietary MOCVD recipes unrepresentable); crystals + wafers are design/spec ONLY (:fabricated false, G2). hotaru IS the construction of the 'open-source III-V wafer IP commons' that ADR-2605265500 §2's R4+ re-evaluation gate references; III-V *fabrication* remains PROHIBITED through R3 (inherited, unchanged) and hotaru is NON-ADJUDICATING on the gate (G3 — it reports, Council decides)."

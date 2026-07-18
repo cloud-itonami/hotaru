@@ -1,0 +1,135 @@
+;; iii-v-substrate-ontology.kotoba.edn — vocabulary for hotaru (蛍)
+;; ADR-2606051200 · actor: 20-actors/hotaru/
+;;
+;; SCOPE: the OPEN-PUBLICATION knowledge commons for III-V compound-semiconductor
+;;   SUBSTRATE generation + manufacturing — indium phosphide (InP) first, then the
+;;   adjacent direct-bandgap III-V family (GaAs / GaN / InGaAs / GaSb). The substrate
+;;   chain is: element/compound :synthesis → single-crystal :bulk-growth (LEC / VGF /
+;;   VB) → :wafering (saw / lap / CMP) → epi-ready :surface-prep. The :epitaxy /
+;;   device stage (MOVPE / MBE full stack-up) is the vendor-IP-dense stage that
+;;   ADR-2605265500 §2 flagged — it is recorded here ONLY as a tracked GAP, never as
+;;   a practiceable recipe (see the source-license invariant).
+;;
+;; WHY hotaru (蛍, firefly): silicon has an INDIRECT bandgap and cannot emit light
+;;   efficiently — that physical fact is WHY the III-V direct-bandgap family exists
+;;   (lasers / LEDs / photodetectors / the optics that run optical fibre + the
+;;   submarine cables watatsuna maps). hotaru is the light-emitting-crystal commons;
+;;   the iwakura/fuigo silicon track (ADR-2605242500) is its indirect-bandgap sibling.
+;;
+;; CONSTITUTIONAL CONTEXT (CRITICAL): ADR-2605265500 §2 PROHIBITS religious-corp
+;;   III-V *manufacturing* through R3 (MOCVD epitaxy vendor-IP density + no open
+;;   commons + In/Ge sourcing audit + ITAR/EAR). Its R4+ re-evaluation gate is
+;;   conditioned on "open-source III-V wafer + epitaxy IP becomes available
+;;   (currently no such commons exists)". hotaru IS the construction of that commons
+;;   — a design + datafication + simulation actor, NOT a fab. Fabrication stays
+;;   PROHIBITED through R3 (inherited, unchanged).
+;;
+;; INVARIANT #1 — OPEN-IP-ONLY (G1, enforced in schema + lexicon `enum` + analyze.py):
+;;   :iiiv.proc/source-license takes ONLY the practiceable-open set
+;;   {:academic-oa :patent-expired :textbook-public :standard-public :own-rnd}.
+;;   :vendor-proprietary / :patent-active / :trade-secret are NOT representable.
+;;   The data model cannot hold a proprietary MOCVD recipe by construction; this is
+;;   what makes the graph a *commons* the ADR-2605265500 R4+ gate can reference.
+;;
+;; INVARIANT #2 — DESIGN-ONLY / NOT-FABRICATED (G2, enforced 3 places):
+;;   :iiiv.crystal/fabricated and :iiiv.wafer/fabricated are :db/allowed [false] at
+;;   R0..R3. There is NO true value. The model cannot represent a physically grown
+;;   boule or a manufactured wafer until the R4+ gate opens (Council Lv7+).
+;;
+;; INVARIANT #3 — CONFLICT-MINERAL SOURCING (G4, inherits hikari/himawari §G2):
+;;   In and Ga are :iiiv.precursor/conflict-mineral true. Any crystal consuming a
+;;   conflict-mineral element MUST declare :iiiv.crystal/in-sourcing ∈
+;;   {:recycled :conflict-free-attested}; :unverified is flagged by analyze.py.
+;;
+;; SOURCING (G5): every node carries :*/sourcing. BOUNDED illustrative seed. Process
+;;   facts (LEC InP, VGF, EPD targets) are matters of public/scholarly + expired-patent
+;;   record; figures are :representative and MUST be verified against the cited primary
+;;   source before any outward use (G7-gated).
+;;
+;; HISTORY (非終末論): commons coverage is an :as-of trajectory — no final "commons
+;;   complete" datom; the gap to the R4+ gate is the moving record.
+
+{:ontology "com.etzhayyim.hotaru.iii-v-substrate"
+ :version  1
+ :graph    {:name "iii-v-substrate-v1" :visibility :public}
+
+ :attributes
+ {;; ───────────────────────── :iiiv.material/* — the compound ────────────────
+  :iiiv.material/id          {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+  :iiiv.material/name        {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.material/formula     {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.material/bandgap-ev  {:db/valueType :db.type/double  :db/cardinality :db.cardinality/one
+                              :db/doc "room-temperature bandgap in eV"}
+  :iiiv.material/bandgap-type {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                               :db/doc "one of :direct | :indirect — III-V family is :direct (the hotaru raison d'être)"
+                               :db/allowed [:direct :indirect]}
+  :iiiv.material/form        {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "is this material grown as a bulk single-crystal SUBSTRATE, or only as an EPITAXIAL layer on another substrate? :epitaxial-only materials (e.g. InGaAs on InP) are NOT expected to have a bulk substrate chain — they are correctly excluded from substrate-coverage, not counted as a gap."
+                              :db/allowed [:bulk-substrate :epitaxial-only]}
+  :iiiv.material/lattice-a   {:db/valueType :db.type/double  :db/cardinality :db.cardinality/one
+                              :db/doc "lattice constant a in angstrom"}
+  :iiiv.material/substrate-for {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/many
+                                :db/doc "device families this substrate enables (civilian only — N1)"}
+  :iiiv.material/sourcing    {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+  ;; ───────────────────── :iiiv.proc/* — process knowledge ───────────────────
+  :iiiv.proc/id              {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+  :iiiv.proc/name            {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.proc/stage           {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "substrate chain stage"
+                              :db/allowed [:synthesis :bulk-growth :wafering :surface-prep :epitaxy]}
+  :iiiv.proc/method          {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+  :iiiv.proc/source-license  {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "INVARIANT #1 (G1) — practiceable-open licenses ONLY. :vendor-proprietary / :patent-active / :trade-secret are NOT permitted values; analyze.py raises ValueError on any non-open license."
+                              :db/allowed [:academic-oa :patent-expired :textbook-public :standard-public :own-rnd]}
+  :iiiv.proc/source-cite     {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one
+                              :db/doc "primary-source citation (paper DOI / expired patent no. / textbook / SEMI std)"}
+  :iiiv.proc/material        {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.proc/maturity        {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "commons maturity — :open-mature (practiceable from open record) | :open-emerging | :gap (vendor-IP-dense, full recipe NOT in the commons)"
+                              :db/allowed [:open-mature :open-emerging :gap]}
+  :iiiv.proc/sourcing        {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+  ;; ─────────────── :iiiv.crystal/* — single-crystal growth DESIGN ────────────
+  :iiiv.crystal/id           {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+  :iiiv.crystal/name         {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.crystal/material     {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.crystal/method       {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+  :iiiv.crystal/dopant       {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "e.g. :sulfur (n) :iron (semi-insulating) :undoped"}
+  :iiiv.crystal/target-wafer {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.crystal/in-sourcing  {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                              :db/doc "INVARIANT #3 (G4) — conflict-mineral In/Ga sourcing; :unverified is flagged"
+                              :db/allowed [:recycled :conflict-free-attested :unverified]}
+  :iiiv.crystal/fabricated   {:db/valueType :db.type/boolean :db/cardinality :db.cardinality/one
+                              :db/doc "INVARIANT #2 (G2) — DESIGN ONLY through R3. :db/allowed [false]; no true value. analyze.py raises ValueError if any crystal is fabricated."
+                              :db/allowed [false]}
+  :iiiv.crystal/sourcing     {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+  ;; ─────────────────── :iiiv.wafer/* — finished wafer SPEC ───────────────────
+  :iiiv.wafer/id             {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+  :iiiv.wafer/name           {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.wafer/material       {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.wafer/diameter-mm    {:db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+  :iiiv.wafer/orientation    {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.wafer/epd-cm2        {:db/valueType :db.type/long    :db/cardinality :db.cardinality/one
+                              :db/doc "etch-pit density target (cm^-2) — bulk crystal quality metric"}
+  :iiiv.wafer/doping         {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+  :iiiv.wafer/fabricated     {:db/valueType :db.type/boolean :db/cardinality :db.cardinality/one
+                              :db/doc "INVARIANT #2 (G2) — SPEC ONLY through R3. :db/allowed [false]."
+                              :db/allowed [false]}
+  :iiiv.wafer/sourcing       {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+  ;; ──────────────── :iiiv.precursor/* — material + safety membrane ───────────
+  :iiiv.precursor/id         {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+  :iiiv.precursor/name       {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.precursor/formula    {:db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+  :iiiv.precursor/hazard-class {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                                :db/doc "e.g. :acute-toxic-pyrophoric (PH3) :flammable :low :benign"}
+  :iiiv.precursor/conflict-mineral {:db/valueType :db.type/boolean :db/cardinality :db.cardinality/one
+                                    :db/doc "INVARIANT #3 (G4) — In/Ga = true; triggers crystal in-sourcing check"}
+  :iiiv.precursor/export-control {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+                                  :db/doc "one of :none :ear :itar — ITAR/EAR gate (ADR-2605265500 §2 jurisdictional risk)"
+                                  :db/allowed [:none :ear :itar]}
+  :iiiv.precursor/used-in    {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/many}
+  :iiiv.precursor/sourcing   {:db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}}}

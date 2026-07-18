@@ -1,4 +1,4 @@
-(ns hotaru.cells.commons-readiness.test-state-machine
+(ns hotaru.cells.commons-readiness.state-machine-test
   "clojure.test port of the commons_readiness assertions from
   `cells/test_state_machines.py` (hotaru 蛍, ADR-2606051200).
 

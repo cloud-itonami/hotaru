@@ -1,4 +1,4 @@
-(ns hotaru.cells.test-state-machine
+(ns hotaru.cells.state-machine-test
   "State-machine tests for hotaru 蛍 cells (R0) — commons_ingest/precursor_safety/bulk_crystal_design/
   wafer_fab_design. 1:1 port of the matching portions of cells/test_state_machines.py (ADR-2606051200).
   (commons_readiness has its own test_state_machine.cljc.) .solve() raises at R0."
