@@ -3,7 +3,13 @@
   boundary (hotaru.murakumo): gate-value / missing-gates / put-record-effect /
   records-for / cell-plan / all-cell-plans. Introspects `cell-specs` rather
   than hardcoding cell names, so it holds regardless of which cells this
-  actor's manifest declares."
+  actor's manifest declares.
+
+  NOTE the cost of that generality: this suite was green while `cell-specs`
+  described a single placeholder cell `:null` and manifest.edn declared five
+  real ones. Being green here says nothing about whether the boundary knows
+  what this actor is. `hotaru.governor-drift-test` is where code is held
+  against the declarations."
   (:require [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [hotaru.murakumo :as m]))
@@ -73,13 +79,46 @@
       (is (empty? (:effects plan)))
       (is (= (get-in m/cell-specs [cell-key :required-gates]) (:missing-gates plan))))))
 
-(deftest cell-plan-ready-when-gates-satisfied
+(deftest baseline-attestations-do-not-by-themselves-authorize-publication
+  ;; This used to assert :ready. It was asserting the defect: the seven baseline
+  ;; attestations are generic, none of them is one of the eleven charter gates
+  ;; this actor declares, and satisfying them was enough to emit an atproto
+  ;; put-record while the actor is at R0. The baselines are now a precondition
+  ;; for being HEARD by the governor, not an authorization.
   (doseq [cell-key (keys m/cell-specs)]
     (let [plan (m/cell-plan cell-key {:attestations full-attestations :request-id "req-1"})]
-      (is (= :ready (:status plan)))
-      (is (empty? (:missing-gates plan)))
-      (is (= (count (get-in m/cell-specs [cell-key :collections]))
-             (count (:effects plan)))))))
+      (is (empty? (:missing-gates plan)) "the baselines themselves are satisfied")
+      (is (= :refused (:status plan))
+          "no charter authority was presented, so nothing may leave the actor")
+      (is (empty? (:effects plan)) "a refused plan emits no effects")
+      (is (seq (:refusals plan)) "and it says why"))))
+
+(deftest cell-plan-refusals-name-a-gate-and-a-reason
+  (doseq [cell-key (keys m/cell-specs)]
+    (let [plan (m/cell-plan cell-key {:attestations full-attestations :request-id "req-1"})]
+      (doseq [r (:refusals plan)]
+        (is (contains? #{:refuse :undecidable} (:decision r)))
+        (is (some? (:gate r)))
+        (is (keyword? (:reason r)))
+        (is (string? (:detail r)))))))
+
+(deftest the-scaffold-cell-cannot-be-published-even-with-full-authority
+  ;; cell-specs still describes one placeholder cell, :null, whose collection
+  ;; com.etzhayyim.hotaru.null has no lexicon in lex/ and is not in manifest.edn
+  ;; :actor/lex. Council authority does not make an undeclared collection
+  ;; publishable, and the governor says so by name.
+  (let [plan (m/cell-plan :null {:attestations full-attestations
+                                 :request-id "req-1"
+                                 :council-level "Lv7+"
+                                 :operator-signature "operator-sig-1"})]
+    (is (= :refused (:status plan)))
+    (is (= [:undeclared-collection] (mapv :reason (:refusals plan))))))
+
+(deftest governor-ctx-passes-only-the-claimed-authority
+  (is (= {:council-level "Lv7+" :operator-signature "s" :server-signature "x"}
+         (m/governor-ctx {:council-level "Lv7+" :operator-signature "s"
+                          :server-signature "x" :request-id "req-1" :records {}})))
+  (is (= {} (m/governor-ctx {:request-id "req-1"}))))
 
 (deftest cell-plan-throws-on-unknown-cell
   (is (thrown? #?(:clj clojure.lang.ExceptionInfo :cljs ExceptionInfo)
@@ -88,4 +127,5 @@
 (deftest all-cell-plans-covers-every-cell
   (let [plans (m/all-cell-plans {:attestations full-attestations :request-id "req-1"})]
     (is (= (set (keys m/cell-specs)) (set (keys plans))))
-    (is (every? #(= :ready (:status %)) (vals plans)))))
+    (is (every? #(= :refused (:status %)) (vals plans))
+        "every cell is governed, not just the one a test happened to name")))

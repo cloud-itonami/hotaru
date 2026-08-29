@@ -1,9 +1,19 @@
 (ns hotaru.murakumo
-  "Pure cljc actor boundary generated from manifest migration scaffold."
-  (:require [clojure.string :as str]))
+  "Pure cljc actor boundary generated from manifest migration scaffold.
+
+  Outward effects planned here are decided by `hotaru.governor` before they are
+  emitted. The baseline attestations below are a PRECONDITION, not the charter:
+  satisfying them gets a plan as far as the governor, which then asks the gates
+  this actor actually declares in manifest.edn."
+  (:require [clojure.string :as str]
+            [hotaru.governor :as gov]))
 
 (def actor-did
-  "did:web:hotaru.etzhayyim.com")
+  "manifest.edn :actor/did and the `id` of .well-known/did.json. The previous
+  value here, did:web:hotaru.etzhayyim.com, appeared nowhere else in the repo
+  and is not in did.json alsoKnownAs — the boundary was attributing its effects
+  to a DID the actor does not claim."
+  "did:web:etzhayyim.com:actor:hotaru")
 
 (def common-gates
   [:council-charter-attestation
@@ -88,6 +98,12 @@
           :rkey rkey}))
      (:collections spec))))
 
+(defn governor-ctx
+  "The authority the caller claims to hold, handed to the governor. Absent keys
+  mean absent authority — the governor refuses rather than assuming."
+  [input]
+  (select-keys input [:council-level :operator-signature :server-signature]))
+
 (defn cell-plan
   [cell-key {:keys [attestations] :as input}]
   (let [spec (get cell-specs cell-key)]
@@ -107,12 +123,23 @@
        (if (seq missing)
          {:status :blocked
           :effects []}
-         (let [planned-records (records-for spec input)]
-           {:status :ready
-            :records (vec planned-records)
-            :effects (mapv (fn [{:keys [collection record rkey]}]
-                             (put-record-effect collection rkey record))
-                           planned-records)}))))))
+         (let [planned-records (records-for spec input)
+               planned-effects (mapv (fn [{:keys [collection record rkey]}]
+                                       (put-record-effect collection rkey record))
+                                     planned-records)
+               decisions (gov/review-effects planned-effects (governor-ctx input))]
+           (if (gov/permit-all? decisions)
+             {:status :ready
+              :records (vec planned-records)
+              :effects planned-effects
+              :governor-decisions decisions}
+             ;; Fail closed on the whole set rather than emitting the permitted
+             ;; subset: a partially governed publication is not a governed one.
+             {:status :refused
+              :records (vec planned-records)
+              :effects []
+              :governor-decisions decisions
+              :refusals (gov/refusals decisions)})))))))
 
 (defn all-cell-plans
   [input]
