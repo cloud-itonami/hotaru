@@ -3,7 +3,7 @@
   wafer_fab_design. 1:1 port of the matching portions of cells/test_state_machines.py (ADR-2606051200).
   (commons_readiness has its own test_state_machine.cljc.) .solve() raises at R0."
   (:require [clojure.test :refer [deftest is]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [hotaru.cells.commons-ingest.state-machine :as ci]
             [hotaru.cells.precursor-safety.state-machine :as ps]
             [hotaru.cells.bulk-crystal-design.state-machine :as bc]

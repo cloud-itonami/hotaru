@@ -5,7 +5,7 @@
   emitted. The baseline attestations below are a PRECONDITION, not the charter:
   satisfying them gets a plan as far as the governor, which then asks the gates
   this actor actually declares in manifest.edn."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [hotaru.governor :as gov]))
 
 (def actor-did

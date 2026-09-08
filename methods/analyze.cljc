@@ -24,7 +24,7 @@
 
   House style: Python ':…' keyword strings stay strings; pure fns; file I/O only at
   #?(:clj) edges via clojure.java.io. Portable .cljc."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── minimal EDN reader (subset: [] {} :kw \"str\" num bool nil) — ported from nusa.
 ;; Mirrors analyze.py's _TOK / _tokens / _atom / _parse faithfully. Keywords are kept as
@@ -560,17 +560,17 @@
     (doseq [st SUBSTRATE-STAGES]
       (let [s (get-in a ["per_stage" st])]
         (P (str " {:hotaru.derived/stage " st " :hotaru.derived/covered "
-                (str/lower-case (py-bool (get s "covered"))) " "
+                (str/lower (py-bool (get s "covered"))) " "
                 ":hotaru.derived/open-mature " (get s "mature") " :hotaru.derived/sourcing :derived}"))))
     (let [sf (get a "safety")]
       (P (str " {:hotaru.derived/substrate-commons-ready "
-              (str/lower-case (py-bool (get a "substrate_commons_ready"))) " "
+              (str/lower (py-bool (get a "substrate_commons_ready"))) " "
               ":hotaru.derived/r4-gate-satisfiable "
-              (str/lower-case (py-bool (get a "r4_gate_satisfiable"))) " "
+              (str/lower (py-bool (get a "r4_gate_satisfiable"))) " "
               ":hotaru.derived/maturity-score " (py-float (get a "maturity_score")) " "
               ":hotaru.derived/acute-toxic-precursors " (get sf "acute_toxic") " "
               ":hotaru.derived/conflict-mineral-precursors " (get sf "conflict_mineral") " "
-              ":hotaru.derived/itar-present " (str/lower-case (py-bool (get sf "itar_present"))) " "
+              ":hotaru.derived/itar-present " (str/lower (py-bool (get sf "itar_present"))) " "
               ":hotaru.derived/open-gaps " (count (get a "gaps")) " "
               ":hotaru.derived/conflict-flagged " (count (get a "cm_flagged"))
               " :hotaru.derived/sourcing :derived}")))

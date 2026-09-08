@@ -3,7 +3,7 @@
   1:1 port of cells/precursor_safety/state_machine.py (ADR-2606051200). A design clears review ONLY
   after: G4 every conflict-mineral element carries clean :in-sourcing; G3 every acute-toxic precursor
   is acknowledged; export-control posture recorded. A REFUSAL gate — it refuses, never clamps."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def clean-sourcing #{"recycled" "conflict-free-attested"})
 (def acute-hazards #{"acute-toxic-pyrophoric" "acute-toxic"})

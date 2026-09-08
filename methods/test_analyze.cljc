@@ -18,7 +18,7 @@
   All 25 Python assertions are ported 1:1. There is no datom_emit/coverage sibling in
   hotaru (the report + datoms both live in analyze), so no tests are deferred."
   (:require [clojure.test :refer [deftest is run-tests]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [clojure.set]
             [clojure.java.io :as io]
             [hotaru.methods.analyze :as A]))

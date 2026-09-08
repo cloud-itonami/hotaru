@@ -3,7 +3,7 @@
   1:1 port of cells/wafer_fab_design/state_machine.py (ADR-2606051200). Boule → wire-saw → lap → CMP
   → epi-ready surface SPEC design. G2 design-only (fabricated forced false), spec-sanity (known
   diameter/orientation, EPD positive int). ValueError → ex-info."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def known-diameters-um #{50800 76200 100000})   ; 2-inch / 3-inch / 4-inch
 (def known-orientations #{"(100)" "(111)" "(110)"})

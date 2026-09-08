@@ -24,7 +24,7 @@
     - Python \":…\" string identities stay strings (maturity labels)
     - ReadinessPhase enum value identities (\"init\"/\"assessed\"/\"reported\") stay strings
     - transitions are pure fns; closed-vocab / illegal-transition / G3 → ex-info"
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── module constants (Python module-level) ──────────────────────
 
