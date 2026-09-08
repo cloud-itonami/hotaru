@@ -3,7 +3,7 @@
   1:1 port of cells/bulk_crystal_design/state_machine.py (ADR-2606051200). Single-crystal InP boule
   growth DESIGN (LEC/VGF/VB). G2 design-only (fabricated forced false; any true raises), G4 In/Ga
   clean sourcing, bulk-growth method only (epitaxy refused). ValueError → ex-info."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def allowed-methods #{"lec" "vgf" "vertical-bridgman"})
 (def clean-sourcing #{"recycled" "conflict-free-attested"})

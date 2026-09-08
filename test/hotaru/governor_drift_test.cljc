@@ -7,7 +7,7 @@
   Same intent as methods/test_charter_gates.cljc, which pins manifest against
   lexicon. This pins CODE against both. clj-only: it reads files."
   (:require [clojure.test :refer [deftest is testing]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             #?(:clj [clojure.edn :as edn])
             #?(:clj [clojure.java.io :as io])
             [hotaru.governor :as gov]))
@@ -49,7 +49,7 @@
        (is (= (set (lex-field "processKnowledge" :sourceLicense :enum))
               gov/open-licenses)
            "G1: governor/open-licenses must equal processKnowledge.sourceLicense enum")
-       (is (not-any? #(str/includes? (str/lower-case %) "proprietary") gov/open-licenses)))
+       (is (not-any? #(str/includes? (str/lower %) "proprietary") gov/open-licenses)))
 
      (deftest council-level-matches-the-review-lexicon-const
        (is (= (lex-field "silenHotaruReview" :councilLevel :const)

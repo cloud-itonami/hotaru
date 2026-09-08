@@ -19,7 +19,7 @@
 
   Reads manifest via cheshire + local lexicons via clojure.edn. It weakens no gate; it asserts
   them. G5 (no-server-key) + Murakumo-only (G6) are manifest-level and untouched."
-  (:require [clojure.test :refer [deftest is run-tests]]
+  (:require [kotoba.lang.text] [clojure.test :refer [deftest is run-tests]]
             [clojure.edn :as edn]
             [cheshire.core :as json]))
 
@@ -63,7 +63,7 @@
   (let [e (enum-of (lex "processKnowledge") :sourceLicense)]
     (is (= #{"academic-oa" "patent-expired" "textbook-public" "standard-public" "own-rnd"} e)
         (str "G1: sourceLicense must be the open-IP set, got " e))
-    (is (not (some #(clojure.string/includes? (clojure.string/lower-case %) "proprietary") e))
+    (is (not (some #(kotoba.lang.text/includes? (kotoba.lang.text/lower %) "proprietary") e))
         "G1: no proprietary license representable")))
 
 ;; ── G4 — conflict-mineral sourcing ──

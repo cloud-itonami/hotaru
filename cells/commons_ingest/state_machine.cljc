@@ -3,7 +3,7 @@
   1:1 port of cells/commons_ingest/state_machine.py (ADR-2606051200). A process datom becomes an
   open-publication record ONLY after its source-license passes the open-IP screen (G1) and carries a
   primary-source citation (G5). Conventions: dataclass → plain map (Python string keys); ValueError → ex-info."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def allowed-licenses #{"academic-oa" "patent-expired" "textbook-public" "standard-public" "own-rnd"})
 (def allowed-stages #{"synthesis" "bulk-growth" "wafering" "surface-prep" "epitaxy"})

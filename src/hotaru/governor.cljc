@@ -31,7 +31,7 @@
   source of truth. `hotaru.governor-drift-test` reads those files and asserts
   the agreement, in the same spirit as `methods/test_charter_gates.cljc`, so the
   governor cannot silently drift away from the charter it enforces."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── what the actor declares about itself (mirrors; drift-tested) ────────────
 

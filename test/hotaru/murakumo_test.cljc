@@ -10,7 +10,7 @@
   real ones. Being green here says nothing about whether the boundary knows
   what this actor is. `hotaru.governor-drift-test` is where code is held
   against the declarations."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is testing]]
             [hotaru.murakumo :as m]))
 
