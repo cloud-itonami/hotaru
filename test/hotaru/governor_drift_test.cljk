@@ -4,7 +4,7 @@
   declarations and asserts the agreement, so the governor cannot come to
   enforce a charter the actor no longer has.
 
-  Same intent as methods/test_charter_gates.cljc, which pins manifest against
+  Same intent as methods/test_charter_gates.cljk, which pins manifest against
   lexicon. This pins CODE against both. clj-only: it reads files."
   (:require [clojure.test :refer [deftest is testing]]
             [kotoba.lang.text :as str]
@@ -71,7 +71,7 @@
              ;; the gates this governor can actually return, read off the source
              ;; rather than restated here
              cited (set (re-seq #"\"G\d+\""
-                                (slurp (repo-file "src/hotaru/governor.cljc"))))
+                                (slurp (repo-file "src/hotaru/governor.cljk"))))
              cited (set (map #(str/replace % "\"" "") cited))]
          (is (seq declared) "manifest must declare gates")
          (is (seq cited) "the governor must cite at least one numbered gate")
