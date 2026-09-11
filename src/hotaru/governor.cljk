@@ -29,7 +29,7 @@
   Every constant below mirrors a declaration that lives somewhere else in this
   repo — `manifest.edn`, `.well-known/did.json`, `lex/*.edn`. It is not a second
   source of truth. `hotaru.governor-drift-test` reads those files and asserts
-  the agreement, in the same spirit as `methods/test_charter_gates.cljc`, so the
+  the agreement, in the same spirit as `methods/test_charter_gates.cljk`, so the
   governor cannot silently drift away from the charter it enforces."
   (:require [kotoba.lang.text :as str]))
 

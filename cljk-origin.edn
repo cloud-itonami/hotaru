@@ -1,0 +1,22 @@
+{:format :kotoba.cljk-origin/v1
+ :renamed-on "2026-09-11"
+ :decision "adr-2609111500-cljk-rename-all-clojure-source (com-junkawasaki/root 90-docs/adr; owner instruction 2026-09-11)"
+ :rule "value = the extension the file had before the rename. A path ending in .clj.cljk or .cljs.cljk kept it in the name because both platform files existed (or the plain target was taken)."
+ :origins
+ {"cells/bulk_crystal_design/state_machine.cljk" ".cljc"
+  "cells/commons_ingest/state_machine.cljk" ".cljc"
+  "cells/commons_readiness/state_machine.cljk" ".cljc"
+  "cells/commons_readiness/test_state_machine.cljk" ".cljc"
+  "cells/precursor_safety/state_machine.cljk" ".cljc"
+  "cells/test_state_machine.cljk" ".cljc"
+  "cells/wafer_fab_design/state_machine.cljk" ".cljc"
+  "methods/analyze.cljk" ".cljc"
+  "methods/test_analyze.cljk" ".cljc"
+  "methods/test_charter_gates.cljk" ".cljc"
+  "methods/test_lexicon_wire.cljk" ".clj"
+  "scripts/gen-lexicons.cljk" ".clj"
+  "src/hotaru/governor.cljk" ".cljc"
+  "src/hotaru/murakumo.cljk" ".cljc"
+  "test/hotaru/governor_drift_test.cljk" ".cljc"
+  "test/hotaru/governor_test.cljk" ".cljc"
+  "test/hotaru/murakumo_test.cljk" ".cljc"}}
