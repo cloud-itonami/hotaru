@@ -15,7 +15,7 @@
 #?(:clj
    (do
      (defn- repo-file
-       "clojure -M:test runs at the repo root."
+       "kbb -M:test runs at the repo root."
        [rel]
        (io/file (System/getProperty "user.dir") rel))
 
