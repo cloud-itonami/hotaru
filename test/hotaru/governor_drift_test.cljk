@@ -8,7 +8,7 @@
   lexicon. This pins CODE against both. clj-only: it reads files."
   (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.text :as str]
-            #?(:clj [clojure.edn :as edn])
+            #?(:clj [kotoba.lang.edn :as edn])
             #?(:clj [clojure.java.io :as io])
             [hotaru.governor :as gov]))
 
