@@ -1,7 +1,7 @@
 (ns hotaru.methods.test-lexicon-wire
   (:require [cheshire.core :as json]
             [clojure.edn :as edn]
-            [clojure.test :refer [deftest is]]
+            [kotoba.test :refer [deftest is]]
             [babashka.fs :as fs]))
 
 (deftest generated-wire-matches-canonical-edn

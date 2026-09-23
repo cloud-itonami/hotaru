@@ -7,7 +7,7 @@
   asserted 'it refused' would also pass when the effect was refused for some
   unrelated reason, which is how a gate comes to be believed for a job it is
   not doing."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [hotaru.governor :as gov]))
 
 ;; ── the one effect this actor could lawfully publish, and the authority to ──
