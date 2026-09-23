@@ -6,7 +6,7 @@
 
   Same intent as methods/test_charter_gates.cljk, which pins manifest against
   lexicon. This pins CODE against both. clj-only: it reads files."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.text :as str]
             #?(:clj [clojure.edn :as edn])
             #?(:clj [clojure.java.io :as io])

@@ -16,7 +16,7 @@
                          nonpositive-epd / .solve raise)
     - the .solve()-raises case for the CommonsReadinessCell itself (cell.py, not
       state_machine.py — the cell class is not part of the .cljc port surface)."
-  (:require [clojure.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.test :refer [deftest is testing run-tests]]
             [hotaru.cells.commons-readiness.state-machine :as sm]))
 
 ;; ── helper (port of the Python `_readiness`) ─────────────────────

@@ -11,7 +11,7 @@
   what this actor is. `hotaru.governor-drift-test` is where code is held
   against the declarations."
   (:require [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is testing]]
+            [kotoba.test :refer [deftest is testing]]
             [hotaru.murakumo :as m]))
 
 (def full-attestations

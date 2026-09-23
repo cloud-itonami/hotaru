@@ -19,7 +19,7 @@
 
   Reads manifest via cheshire + local lexicons via clojure.edn. It weakens no gate; it asserts
   them. G5 (no-server-key) + Murakumo-only (G6) are manifest-level and untouched."
-  (:require [kotoba.lang.text] [clojure.test :refer [deftest is run-tests]]
+  (:require [kotoba.lang.text] [kotoba.test :refer [deftest is run-tests]]
             [clojure.edn :as edn]
             [cheshire.core :as json]))
 
