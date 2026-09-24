@@ -20,13 +20,13 @@
   (:require [kotoba.test :refer [deftest is run-tests]]
             [kotoba.lang.text :as str]
             [kotoba.lang.coll]
-            [clojure.java.io :as io]
+            [kotoba.io :as io]
             [hotaru.methods.analyze :as A]))
 
-(def here (-> *file* io/file .getParentFile))
-(def actor-dir (.getParentFile here))
+(def here (-> *file* io/file io/parent-file))
+(def actor-dir (io/parent-file here))
 (def seed (io/file actor-dir "data" "seed-iii-v-substrate.kotoba.edn"))
-(def root (-> here .getParentFile .getParentFile .getParentFile))
+(def root (-> here io/parent-file io/parent-file io/parent-file))
 (def lex-dir (io/file actor-dir "lex"))
 (def onto-file (io/file root "00-contracts" "schemas" "iii-v-substrate-ontology.kotoba.edn"))
 
