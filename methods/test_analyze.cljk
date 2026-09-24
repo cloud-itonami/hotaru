@@ -19,7 +19,7 @@
   hotaru (the report + datoms both live in analyze), so no tests are deferred."
   (:require [kotoba.test :refer [deftest is run-tests]]
             [kotoba.lang.text :as str]
-            [clojure.set]
+            [kotoba.lang.coll]
             [clojure.java.io :as io]
             [hotaru.methods.analyze :as A]))
 
@@ -173,7 +173,7 @@
     (let [gan-absent (set (for [g gaps :when (and (= (get g "material") "gan")
                                                   (= (get g "status") "absent"))]
                             (get g "stage")))]
-      (is (clojure.set/subset? #{"synthesis" "wafering" "surface-prep"} gan-absent)))
+      (is (kotoba.lang.coll/subset? #{"synthesis" "wafering" "surface-prep"} gan-absent)))
     (is (not (some #(contains? #{"inp" "gaas" "gasb" "insb"} (get % "material")) gaps)))))
 
 (deftest test-gan-bulk-is-tracked-but-never-open-mature
@@ -247,8 +247,8 @@
                           (get-in lex [":defs" ":main" ":record" ":properties" ":inSourcing" ":enum"])))
         code-set (set (map lstrip-colon* A/CLEAN-SOURCING))]
     (is (= lex-set code-set))
-    (is (and (clojure.set/subset? code-set schema-set) (not= code-set schema-set)))
-    (is (= #{"unverified"} (clojure.set/difference schema-set code-set)))))
+    (is (and (kotoba.lang.coll/subset? code-set schema-set) (not= code-set schema-set)))
+    (is (= #{"unverified"} (kotoba.lang.coll/difference schema-set code-set)))))
 
 (deftest test-render-report-smoke
   (let [[materials procs crystals wafers precursors] (load*)
