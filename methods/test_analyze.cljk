@@ -17,7 +17,7 @@
 
   All 25 Python assertions are ported 1:1. There is no datom_emit/coverage sibling in
   hotaru (the report + datoms both live in analyze), so no tests are deferred."
-  (:require [kotoba.test :refer [deftest is run-tests]]
+  (:require [kotoba.lang.error :as kerror] [kotoba.test :refer [deftest is run-tests]]
             [kotoba.lang.text :as str]
             [kotoba.lang.coll]
             [kotoba.io :as io]
@@ -54,14 +54,14 @@
   (let [[_ procs] (load*)
         k (key (first procs))
         bad (assoc procs k (assoc (get procs k) ":iiiv.proc/source-license" ":vendor-proprietary"))]
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"G1 violation"
+    (is (thrown-with-msg? kerror/ExceptionInfo #"G1 violation"
                           (A/screen-licenses bad)))))
 
 (deftest test-g2-fabricated-true-is-rejected
   (let [[_ _ crystals wafers] (load*)
         k (key (first crystals))
         bad (assoc crystals k (assoc (get crystals k) ":iiiv.crystal/fabricated" true))]
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"G2 violation"
+    (is (thrown-with-msg? kerror/ExceptionInfo #"G2 violation"
                           (A/screen-fabrication bad wafers)))))
 
 (deftest test-g2-all-designs-are-not-fabricated
@@ -234,7 +234,7 @@
     (let [wlex (A/load-edn (io/file lex-dir "waferSpec.edn"))]
       (is (false? (get-in wlex [":defs" ":main" ":record" ":properties" ":fabricated" ":const"]))))
     ;; code: screen-fabrication raises on true (the 3rd place)
-    (is (thrown? clojure.lang.ExceptionInfo
+    (is (thrown? kerror/ExceptionInfo
                  (A/screen-fabrication (array-map "x" (array-map ":iiiv.crystal/fabricated" true))
                                        (array-map))))))
 

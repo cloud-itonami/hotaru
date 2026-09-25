@@ -9,7 +9,7 @@
   (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.text :as str]
             #?(:clj [kotoba.lang.edn :as edn])
-            #?(:clj [clojure.java.io :as io])
+            #?(:clj [kotoba.io :as io])
             [hotaru.governor :as gov]))
 
 #?(:clj
@@ -24,7 +24,7 @@
          ;; Refuse to answer rather than report a pass from a file we could not
          ;; read: a drift test that silently skips is a drift test that is green
          ;; for the same reason whether or not the code agrees with the charter.
-         (assert (.exists f) (str "cannot read " rel " — refusing to report agreement"))
+         (assert (io/exists? f) (str "cannot read " rel " — refusing to report agreement"))
          (edn/read-string (slurp f))))
 
      (def manifest (delay (read-edn "manifest.edn")))
