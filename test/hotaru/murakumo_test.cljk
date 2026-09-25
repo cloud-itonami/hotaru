@@ -10,7 +10,7 @@
   real ones. Being green here says nothing about whether the boundary knows
   what this actor is. `hotaru.governor-drift-test` is where code is held
   against the declarations."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.lang.error :as kerror] [kotoba.lang.text :as str]
             [kotoba.test :refer [deftest is testing]]
             [hotaru.murakumo :as m]))
 
@@ -121,7 +121,7 @@
   (is (= {} (m/governor-ctx {:request-id "req-1"}))))
 
 (deftest cell-plan-throws-on-unknown-cell
-  (is (thrown? #?(:clj clojure.lang.ExceptionInfo :cljs ExceptionInfo)
+  (is (thrown? kerror/ExceptionInfo
                (m/cell-plan :totally-not-a-real-cell {}))))
 
 (deftest all-cell-plans-covers-every-cell

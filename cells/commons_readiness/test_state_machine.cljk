@@ -16,7 +16,7 @@
                          nonpositive-epd / .solve raise)
     - the .solve()-raises case for the CommonsReadinessCell itself (cell.py, not
       state_machine.py — the cell class is not part of the .cljc port surface)."
-  (:require [kotoba.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.lang.error :as kerror] [kotoba.test :refer [deftest is testing run-tests]]
             [hotaru.cells.commons-readiness.state-machine :as sm]))
 
 ;; ── helper (port of the Python `_readiness`) ─────────────────────
@@ -59,7 +59,7 @@
 
 (deftest test-commons-readiness-g3-refuses-adjudicating-key
   (testing "an adjudicating input key raises (G3)"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"G3 violation"
+    (is (thrown-with-msg? kerror/ExceptionInfo #"G3 violation"
                           (readiness :extra {"gateOpened" true})))))
 
 (deftest test-commons-readiness-r4-satisfiable-only-with-open-epitaxy
@@ -90,11 +90,11 @@
     (is (false? (get p "substrateCommonsReady")))))
 
 (deftest test-commons-readiness-unknown-maturity-raises
-  (is (thrown-with-msg? clojure.lang.ExceptionInfo #"unknown maturity"
+  (is (thrown-with-msg? kerror/ExceptionInfo #"unknown maturity"
                         (readiness :per-stage {"synthesis" "bogus"}))))
 
 (deftest test-commons-readiness-report-requires-assessment-first
-  (is (thrown-with-msg? clojure.lang.ExceptionInfo #"requires an assessment first"
+  (is (thrown-with-msg? kerror/ExceptionInfo #"requires an assessment first"
                         (sm/transition-to-reported {:cell-state {}}))))
 
 (deftest test-commons-readiness-conflict-flagged-passthrough
