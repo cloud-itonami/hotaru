@@ -53,7 +53,7 @@ decides the gate** (G3, non-adjudicating).
 ```
 hotaru/
 ├── manifest.edn / manifest.jsonld   # actor manifest (11 gates, 6 non-goals)
-├── CLAUDE.md                        # agent rules
+├── AGENTS.md                        # agent rules
 ├── data/seed-iii-v-substrate.kotoba.edn   # :representative seed (InP-first)
 ├── lex/                             # 6 lexicons com.etzhayyim.hotaru.*
 ├── cells/                           # 5 Pregel cells (5 coded state machines) + 28 tests
